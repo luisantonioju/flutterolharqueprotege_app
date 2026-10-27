@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
+import 'home_page.dart'; // Import relativo para evitar erro de nome de pacote
 
-import 'app/oqp_routes.dart';
-import 'design_system/oqp_theme.dart';
-
-void main() => runApp(const OlharQueProtegeApp());
-
-class OlharQueProtegeApp extends StatelessWidget {
-  const OlharQueProtegeApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Olhar Que Protege',
+void main() {
+  runApp(
+    MaterialApp(
+      title: 'Olhar Que Protege - Blog',
       debugShowCheckedModeBanner: false,
-      theme: OqpTheme.light,
-      initialRoute: OqpRoutes.home,
-      onGenerateRoute: OqpRoutes.onGenerateRoute,
-    );
-  }
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        scaffoldBackgroundColor: const Color(0xFFF8FAFC),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          elevation: 4.0,
+        ),
+      ),
+      home: const HomePage(),
+    ),
+  );
 }
