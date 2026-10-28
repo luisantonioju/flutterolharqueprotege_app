@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: SvgPicture.asset(
           'assets/img/olhar_que_protege_transparente.svg',
-          height: 100, // Aumentado de 30 para 48 para ficar maior e legível
+          height: 100,
           fit: BoxFit.contain,
         ),
         centerTitle: true,
@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      drawer: const Drawer(), // Vírgula adicionada corretamente aqui
+      drawer: const Drawer(),
       body: Column(
         children: [
           SizedBox(
@@ -131,9 +131,9 @@ class _HomePageState extends State<HomePage> {
                             width: double.infinity,
                             height: 120,
                             color: const Color(0xFFE4E9EF),
-                            child: blog.imagem != null
-                                ? Image.network(
-                                    blog.imagem!,
+                            child: blog.imagemAsset != null
+                                ? Image.asset(
+                                    blog.imagemAsset!,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, erro, stack) =>
                                         const Icon(Icons.image_outlined),

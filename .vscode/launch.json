@@ -1,12 +1,10 @@
 {
     "version": "0.2.0",
     "configurations": [
-    Emulator
         {
-            "name": "Flutter Emulator",
+            "name": "flutterolharqueprotege_app",
             "request": "launch",
-            "type": "dart",
-            "deviceId": "flutter_emulator"
+            "type": "dart"
         }
     ]
 }

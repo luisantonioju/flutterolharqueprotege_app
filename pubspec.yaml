@@ -22,3 +22,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/img/olhar_que_protege_transparente.svg
+    - assets/img/
