@@ -38,12 +38,23 @@ class Blog {
     );
   }
 
-  // Getter ajustado para carregar as imagens da pasta assets/img/
-  String? get imagemAsset {
+  // Getter ajustado para gerar a URL completa da imagem vinda do Storage do Laravel
+  String? get imagemUrl {
     if (imagem == null || imagem!.isEmpty) return null;
-    // Se o caminho já vier completo, retorna ele; senão, concatena com assets/img/
-    if (imagem!.startsWith('assets/')) return imagem;
-    return 'assets/img/$imagem';
+
+    // Se a URL já vier completa (http://...), retorna ela mesma
+    if (imagem!.startsWith('http')) return imagem;
+
+    // Se o caminho começar com 'storage/', ajusta para a URL do servidor
+    // No emulador Android, use 10.0.2.2:8000
+    const String baseUrl = 'http://10.0.2.2:8000';
+
+    if (imagem!.startsWith('storage/')) {
+      return '$baseUrl/$imagem';
+    }
+
+    // Se vier apenas 'posts/nome.jpg' (vindo do Storage::disk('public')->files('posts'))
+    return '$baseUrl/storage/$imagem';
   }
 
   String get dataFormatada {

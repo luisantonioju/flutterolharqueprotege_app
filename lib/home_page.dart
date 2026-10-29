@@ -1,7 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'models/blog.dart';
-import 'services/blog_service.dart';
+import 'sobre_page.dart';
+import 'videos_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,13 +12,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final BlogService _blogService = BlogService();
-  late Future<List<Blog>> _listaBlogs;
+  final PageController _pageController = PageController();
+  int _paginaAtual = 0;
+  Timer? _timerCarrossel;
 
   @override
   void initState() {
     super.initState();
-    _listaBlogs = _blogService.getBlogs();
+
+    // Configurando o temporizador para mudar de slide a cada 1 segundo
+    _timerCarrossel = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_pageController.hasClients) {
+        int proximaPagina = _paginaAtual + 1;
+        if (proximaPagina >= carrosselImagens.length) {
+          proximaPagina = 0; // Volta para a primeira imagem ao chegar no fim
+        }
+
+        _pageController.animateToPage(
+          proximaPagina,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timerCarrossel?.cancel();
+    _pageController.dispose();
+    super.dispose();
   }
 
   static final List<String> categorias = [
@@ -28,10 +52,20 @@ class _HomePageState extends State<HomePage> {
     'Esporte',
   ];
 
+  final List<String> carrosselImagens = [
+    'assets/img/banner1.jpg',
+    'assets/img/banner2.jpg',
+    'assets/img/banner3.jpg',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFC5CEEB),
       appBar: AppBar(
+        backgroundColor: const Color(0xFFF7F4EE),
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Color(0xFF1B2A4A)),
         title: SvgPicture.asset(
           'assets/img/olhar_que_protege_transparente.svg',
           height: 100,
@@ -41,171 +75,260 @@ class _HomePageState extends State<HomePage> {
         actions: const [
           Padding(
             padding: EdgeInsets.only(right: 12),
-            child: Icon(Icons.search),
+            child: Icon(Icons.search, color: Color(0xFF1B2A4A)),
           ),
         ],
       ),
-      drawer: const Drawer(),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 45,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              children: categorias.map((categoria) {
-                final selecionada = categoria == 'Todas';
-                return Container(
-                  margin: const EdgeInsets.only(right: 8),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color:
-                          selecionada ? Colors.black : const Color(0xFFEDEDED),
-                    ),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    categoria,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                );
-              }).toList(),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Color(0xFFF7F4EE),
+              ),
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/img/olhar_que_protege_transparente.svg',
+                  height: 100,
+                  fit: BoxFit.contain,
+                ),
+              ),
             ),
-          ),
-          Expanded(
-            child: FutureBuilder<List<Blog>>(
-              future: _listaBlogs,
-              builder: (context, asyncSnapshot) {
-                if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
+              onTap: () => Navigator.pop(context),
+            ),
+            // Localize este trecho dentro do seu Drawer no home_page.dart:
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('Sobre'),
+              onTap: () {
+                Navigator.pop(context); // Fecha o menu lateral
 
-                if (asyncSnapshot.hasError) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'Erro ao carregar: ${asyncSnapshot.error}',
-                        textAlign: TextAlign.center,
+                // ➔ Redireciona para a nova página Sobre
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SobrePage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.video_library),
+              title: const Text('Vídeos'),
+              onTap: () {
+                Navigator.pop(context); // Fecha o menu lateral
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const VideosPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.article),
+              title: const Text('Blog'),
+              onTap: () => Navigator.pop(context),
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.person_add),
+              title: const Text('Cadastrar-me'),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.login),
+              title: const Text('Entrar'),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.star_outline),
+              title: const Text('Extras'),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.group),
+              title: const Text('Equipe'),
+              onTap: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // CATEGORIAS
+            SizedBox(
+              height: 55,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                children: categorias.map((categoria) {
+                  final selecionada = categoria == 'Todas';
+                  return Container(
+                    margin: const EdgeInsets.only(right: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: selecionada
+                            ? const Color(0xFF1B2A4A)
+                            : const Color(0xFFCBD2D9),
+                      ),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      categoria,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight:
+                            selecionada ? FontWeight.bold : FontWeight.normal,
+                        color: const Color(0xFF1B2A4A),
                       ),
                     ),
                   );
-                }
+                }).toList(),
+              ),
+            ),
 
-                final blogs = asyncSnapshot.data ?? [];
-
-                if (blogs.isEmpty) {
-                  return const Center(
-                    child: Text('Nenhum Blog Encontrado'),
-                  );
-                }
-
-                return ListView.builder(
-                  padding: const EdgeInsets.all(12),
-                  itemCount: blogs.length,
+            // CARROSSEL AUTOMÁTICO
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: SizedBox(
+                height: 200,
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: carrosselImagens.length,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _paginaAtual = index;
+                    });
+                  },
                   itemBuilder: (context, index) {
-                    final blog = blogs[index];
-
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      color: Colors.white,
-                      elevation: 0,
-                      clipBehavior: Clip.antiAlias,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: const BorderSide(
-                          color: Color(0xFFCBD2D9),
-                        ),
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Colors.white,
                       ),
-                      child: Column(
+                      clipBehavior: Clip.antiAlias,
+                      child: Stack(
+                        fit: StackFit.expand,
                         children: [
-                          Container(
-                            width: double.infinity,
-                            height: 120,
-                            color: const Color(0xFFE4E9EF),
-                            child: blog.imagemAsset != null
-                                ? Image.asset(
-                                    blog.imagemAsset!,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, erro, stack) =>
-                                        const Icon(Icons.image_outlined),
-                                  )
-                                : const Icon(Icons.image_outlined),
+                          Image.asset(
+                            carrosselImagens[index],
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                              color: const Color(0xFFD3D8EC),
+                              child: const Center(
+                                child: Icon(Icons.image,
+                                    size: 50, color: Colors.grey),
+                              ),
+                            ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFEFF4F8),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Text(
-                                        blog.categoriaNome,
-                                        style: const TextStyle(fontSize: 11),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Text(
-                                      blog.dataFormatada,
-                                      style: const TextStyle(fontSize: 11),
-                                    ),
-                                  ],
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              color: Colors.black.withOpacity(0.4),
+                              child: const Text(
+                                'Acompanhamento Consciente\nMonitorar é um ato de amor e preservação da integridade.',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  blog.titulo,
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    color: Color(0xFF1b2a4a),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(
-                                  height: 4,
-                                ),
-                                Text(
-                                  blog.resumo,
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    color: Color(0xFF5B6B79),
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ],
                       ),
                     );
                   },
-                );
-              },
+                ),
+              ),
             ),
-          ),
-        ],
+
+            // ========================================================
+            // 1. CARD SUPERIOR: IMAGEM PREENCHENDO O BLOCO
+            // ========================================================
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 200,
+                  child: Image.asset(
+                    'assets/img/SUA_IMAGEM_AQUI.jpg',
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: const Color(0xFF9CAAE1),
+                      child: const Center(
+                        child: Icon(Icons.image_outlined,
+                            size: 50, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // ========================================================
+            // 2. CARD INFERIOR: FOTO DAS MENINAS + TEXTO AO LADO
+            // ========================================================
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF8E9BCE),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        'assets/img/meninas-assistindo-laptop-adolescentes-modernos-em-casa-surpresa-e-emocoes 1.png',
+                        width: 130,
+                        height: 100,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          width: 130,
+                          height: 100,
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.image, color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    const Expanded(
+                      child: Text(
+                        'CUIDAR E AMAR, PODE SALVAR E POUPAR.',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          height: 1.3,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
