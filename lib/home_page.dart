@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
   // Modificado aqui para usar a imagem do fone de ouvido nos 3 slides
   final List<String> carrosselImagens = [
     'assets/img/hero-headphones.png',
-    'assets/img/hero-headphones.png',
+    'assets/img/girls-bed-laptop.png',
     'assets/img/hero-headphones.png',
   ];
 
