@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:http/http.dart' as http;
 import 'package:video_player/video_player.dart';
 import 'models/video.dart';
 
@@ -13,44 +11,27 @@ class VideosPage extends StatefulWidget {
 }
 
 class _VideosPageState extends State<VideosPage> {
-  late Future<List<Video>> _listaVideos;
-
-  // URL da API de vídeos ajustada para o emulador Android
-  static const String apiUrl = 'http://10.0.2.2:8000/api/videos';
-
-  @override
-  void initState() {
-    super.initState();
-    _listaVideos = fetchVideos();
-  }
-
-  Future<List<Video>> fetchVideos() async {
-    final response = await http.get(Uri.parse(apiUrl));
-
-    if (response.statusCode == 200) {
-      final decodedData = jsonDecode(response.body);
-      List<dynamic> dados = [];
-
-      // Tratamento para a estrutura paginada do Laravel
-      if (decodedData is Map<String, dynamic>) {
-        if (decodedData.containsKey('data') && decodedData['data'] is Map) {
-          final innerData = decodedData['data'];
-          if (innerData.containsKey('data') && innerData['data'] is List) {
-            dados = innerData['data'];
-          }
-        } else if (decodedData.containsKey('data') &&
-            decodedData['data'] is List) {
-          dados = decodedData['data'];
-        }
-      } else if (decodedData is List) {
-        dados = decodedData;
-      }
-
-      return dados.map((item) => Video.fromJson(item)).toList();
-    } else {
-      throw Exception('Erro ao carregar vídeos: ${response.statusCode}');
-    }
-  }
+  // Lista estática simulando os dados que viriam da API (offline)
+  late final List<Video> _listaVideos = [
+    Video(
+      id: 1,
+      titulo: 'Vídeo 1 - Exemplo',
+      descricao: 'Descrição do primeiro vídeo carregado do repositório GitHub.',
+      arquivo: 'urEMwu5kZDEfYlNjFScZZa78vazf0Xk3U3JNBqvB.mp4',
+    ),
+    Video(
+      id: 2,
+      titulo: 'Vídeo 2 - Exemplo',
+      descricao: 'Descrição do segundo vídeo com espaço no nome do arquivo.',
+      arquivo: 'F8PCdITz4DZyiOxnpjSmiwkAWCImENfxwPm1fbTB (1).mp4',
+    ),
+    Video(
+      id: 3,
+      titulo: 'Vídeo 3 - Exemplo',
+      descricao: 'Descrição do terceiro vídeo carregado do repositório GitHub.',
+      arquivo: 'PFJ9OKMDGK7nS4jk8ZeOZH5DtXv8eTTkWewTH8XV.mp4',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -67,50 +48,12 @@ class _VideosPageState extends State<VideosPage> {
         ),
         centerTitle: true,
       ),
-      body: FutureBuilder<List<Video>>(
-        future: _listaVideos,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(color: Color(0xFF1B2A4A)),
-            );
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Erro ao carregar vídeos:\n${snapshot.error}',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF1B2A4A),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            );
-          }
-
-          final videos = snapshot.data ?? [];
-
-          if (videos.isEmpty) {
-            return const Center(
-              child: Text(
-                'Nenhum vídeo encontrado.',
-                style: TextStyle(fontSize: 16, color: Color(0xFF1B2A4A)),
-              ),
-            );
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(12),
-            itemCount: videos.length,
-            itemBuilder: (context, index) {
-              final video = videos[index];
-              return VideoPlayerCard(video: video);
-            },
-          );
+      body: ListView.builder(
+        padding: const EdgeInsets.all(12),
+        itemCount: _listaVideos.length,
+        itemBuilder: (context, index) {
+          final video = _listaVideos[index];
+          return VideoPlayerCard(video: video);
         },
       ),
     );
@@ -135,21 +78,21 @@ class _VideoPlayerCardState extends State<VideoPlayerCard> {
   void initState() {
     super.initState();
 
-    // Mapeamento inteligente para usar os links diretos do GitHub raw baseados no nome do arquivo
-    String urlParaTocar = widget.video.urlCompleta;
+    // Mapeamento explícito dos 3 links Raw do seu repositório GitHub para teste offline
+    String urlParaTocar = '';
 
     if (widget.video.arquivo
         .contains('urEMwu5kZDEfYlNjFScZZa78vazf0Xk3U3JNBqvB')) {
       urlParaTocar =
-          'https://raw.githubusercontent.com/alessandrojunior466-ops/oljar-protege/main/public/assets/video/urEMwu5kZDEfYlNjFScZZa78vazf0Xk3U3JNBqvB.mp4';
+          'https://raw.githubusercontent.com/luisantonioju/flutterolharqueprotege_app/main/assets/video/urEMwu5kZDEfYlNjFScZZa78vazf0Xk3U3JNBqvB.mp4';
     } else if (widget.video.arquivo
         .contains('PFJ9OKMDGK7nS4jk8ZeOZH5DtXv8eTTkWewTH8XV')) {
       urlParaTocar =
-          'https://raw.githubusercontent.com/alessandrojunior466-ops/oljar-protege/main/public/assets/video/PFJ9OKMDGK7nS4jk8ZeOZH5DtXv8eTTkWewTH8XV.mp4';
+          'https://raw.githubusercontent.com/luisantonioju/flutterolharqueprotege_app/main/assets/video/PFJ9OKMDGK7nS4jk8ZeOZH5DtXv8eTTkWewTH8XV.mp4';
     } else if (widget.video.arquivo
         .contains('F8PCdITz4DZyiOxnpjSmiwkAWCImENfxwPm1fbTB')) {
       urlParaTocar =
-          'https://raw.githubusercontent.com/alessandrojunior466-ops/oljar-protege/main/public/assets/video/F8PCdITz4DZyiOxnpjSmiwkAWCImENfxwPm1fbTB%20(1).mp4';
+          'https://raw.githubusercontent.com/luisantonioju/flutterolharqueprotege_app/main/assets/video/F8PCdITz4DZyiOxnpjSmiwkAWCImENfxwPm1fbTB%20(1).mp4';
     }
 
     _controller = VideoPlayerController.networkUrl(Uri.parse(urlParaTocar))
@@ -194,7 +137,6 @@ class _VideoPlayerCardState extends State<VideoPlayerCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Área de Exibição do Vídeo com proporção correta
           Container(
             width: double.infinity,
             color: Colors.black,
@@ -216,7 +158,6 @@ class _VideoPlayerCardState extends State<VideoPlayerCard> {
                           alignment: Alignment.center,
                           children: [
                             VideoPlayer(_controller),
-                            // Botão centralizado de play/pause translúcido
                             IconButton(
                               icon: Icon(
                                 _controller.value.isPlaying
@@ -237,7 +178,6 @@ class _VideoPlayerCardState extends State<VideoPlayerCard> {
                         ),
                       ),
           ),
-          // Área de texto totalmente separada abaixo do player
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(

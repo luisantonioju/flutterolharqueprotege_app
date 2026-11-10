@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'sobre_page.dart';
 import 'videos_page.dart';
+import 'blog_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -52,10 +53,11 @@ class _HomePageState extends State<HomePage> {
     'Esporte',
   ];
 
+  // Modificado aqui para usar a imagem do fone de ouvido nos 3 slides
   final List<String> carrosselImagens = [
-    'assets/img/banner1.jpg',
-    'assets/img/banner2.jpg',
-    'assets/img/banner3.jpg',
+    'assets/img/hero-headphones.png',
+    'assets/img/hero-headphones.png',
+    'assets/img/hero-headphones.png',
   ];
 
   @override
@@ -100,14 +102,11 @@ class _HomePageState extends State<HomePage> {
               title: const Text('Home'),
               onTap: () => Navigator.pop(context),
             ),
-            // Localize este trecho dentro do seu Drawer no home_page.dart:
             ListTile(
               leading: const Icon(Icons.info_outline),
               title: const Text('Sobre'),
               onTap: () {
                 Navigator.pop(context); // Fecha o menu lateral
-
-                // ➔ Redireciona para a nova página Sobre
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SobrePage()),
@@ -118,7 +117,7 @@ class _HomePageState extends State<HomePage> {
               leading: const Icon(Icons.video_library),
               title: const Text('Vídeos'),
               onTap: () {
-                Navigator.pop(context); // Fecha o menu lateral
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const VideosPage()),
@@ -128,28 +127,14 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: const Icon(Icons.article),
               title: const Text('Blog'),
-              onTap: () => Navigator.pop(context),
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.person_add),
-              title: const Text('Cadastrar-me'),
-              onTap: () => Navigator.pop(context),
-            ),
-            ListTile(
-              leading: const Icon(Icons.login),
-              title: const Text('Entrar'),
-              onTap: () => Navigator.pop(context),
-            ),
-            ListTile(
-              leading: const Icon(Icons.star_outline),
-              title: const Text('Extras'),
-              onTap: () => Navigator.pop(context),
-            ),
-            ListTile(
-              leading: const Icon(Icons.group),
-              title: const Text('Equipe'),
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const BlogPage(),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -256,9 +241,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
 
-            // ========================================================
-            // 1. CARD SUPERIOR: IMAGEM PREENCHENDO O BLOCO
-            // ========================================================
+            // 1. CARD SUPERIOR
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
@@ -282,9 +265,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
 
-            // ========================================================
-            // 2. CARD INFERIOR: FOTO DAS MENINAS + TEXTO AO LADO
-            // ========================================================
+            // 2. CARD INFERIOR
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
