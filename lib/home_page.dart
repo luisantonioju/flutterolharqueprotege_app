@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
   final List<String> carrosselImagens = [
     'assets/img/hero-headphones.png',
     'assets/img/girls-bed-laptop.png',
-    'assets/img/hero-headphones.png',
+    'assets/img/ruiva.png',
   ];
 
   @override
