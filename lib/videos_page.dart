@@ -11,24 +11,24 @@ class VideosPage extends StatefulWidget {
 }
 
 class _VideosPageState extends State<VideosPage> {
-  // Lista estática simulando os dados que viriam da API (offline)
+  // Lista estática apontando diretamente para os seus arquivos do GitHub (sem API)
   late final List<Video> _listaVideos = [
     Video(
       id: 1,
-      titulo: 'Vídeo 1 - Exemplo',
-      descricao: 'Descrição do primeiro vídeo carregado do repositório GitHub.',
+      titulo: 'Vídeo 1',
+      descricao: 'Vídeo carregado diretamente do repositório GitHub.',
       arquivo: 'urEMwu5kZDEfYlNjFScZZa78vazf0Xk3U3JNBqvB.mp4',
     ),
     Video(
       id: 2,
-      titulo: 'Vídeo 2 - Exemplo',
-      descricao: 'Descrição do segundo vídeo com espaço no nome do arquivo.',
+      titulo: 'Vídeo 2',
+      descricao: 'Vídeo com espaço no nome tratado automaticamente.',
       arquivo: 'F8PCdITz4DZyiOxnpjSmiwkAWCImENfxwPm1fbTB (1).mp4',
     ),
     Video(
       id: 3,
-      titulo: 'Vídeo 3 - Exemplo',
-      descricao: 'Descrição do terceiro vídeo carregado do repositório GitHub.',
+      titulo: 'Vídeo 3',
+      descricao: 'Terceiro vídeo carregado do repositório GitHub.',
       arquivo: 'PFJ9OKMDGK7nS4jk8ZeOZH5DtXv8eTTkWewTH8XV.mp4',
     ),
   ];
@@ -60,7 +60,7 @@ class _VideosPageState extends State<VideosPage> {
   }
 }
 
-// Widget isolado para gerenciar o Player de cada vídeo individualmente com eficiência
+// Widget isolado para gerenciar o Player de cada vídeo individualmente
 class VideoPlayerCard extends StatefulWidget {
   final Video video;
   const VideoPlayerCard({super.key, required this.video});
@@ -78,22 +78,8 @@ class _VideoPlayerCardState extends State<VideoPlayerCard> {
   void initState() {
     super.initState();
 
-    // Mapeamento explícito dos 3 links Raw do seu repositório GitHub para teste offline
-    String urlParaTocar = '';
-
-    if (widget.video.arquivo
-        .contains('urEMwu5kZDEfYlNjFScZZa78vazf0Xk3U3JNBqvB')) {
-      urlParaTocar =
-          'https://raw.githubusercontent.com/luisantonioju/flutterolharqueprotege_app/main/assets/video/urEMwu5kZDEfYlNjFScZZa78vazf0Xk3U3JNBqvB.mp4';
-    } else if (widget.video.arquivo
-        .contains('PFJ9OKMDGK7nS4jk8ZeOZH5DtXv8eTTkWewTH8XV')) {
-      urlParaTocar =
-          'https://raw.githubusercontent.com/luisantonioju/flutterolharqueprotege_app/main/assets/video/PFJ9OKMDGK7nS4jk8ZeOZH5DtXv8eTTkWewTH8XV.mp4';
-    } else if (widget.video.arquivo
-        .contains('F8PCdITz4DZyiOxnpjSmiwkAWCImENfxwPm1fbTB')) {
-      urlParaTocar =
-          'https://raw.githubusercontent.com/luisantonioju/flutterolharqueprotege_app/main/assets/video/F8PCdITz4DZyiOxnpjSmiwkAWCImENfxwPm1fbTB%20(1).mp4';
-    }
+    // Pega a URL pronta diretamente do modelo (que usa o raw do GitHub)
+    final String urlParaTocar = widget.video.urlCompleta;
 
     _controller = VideoPlayerController.networkUrl(Uri.parse(urlParaTocar))
       ..initialize().then((_) {

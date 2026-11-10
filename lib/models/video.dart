@@ -22,6 +22,14 @@ class Video {
     );
   }
 
-  // URL apontando para o storage do Laravel acessível pelo emulador Android
-  String get urlCompleta => 'http://10.0.2.2:8000/storage/$arquivo';
+  // URL gerada 100% baseada no seu repositório Raw do GitHub
+  String get urlCompleta {
+    // Pega apenas o nome do arquivo (ex: urEMwu5kZDEfYlNjFScZZa78vazf0Xk3U3JNBqvB.mp4)
+    String nomeArquivo = arquivo.split('/').last.trim();
+
+    // Retorna o link Raw oficial codificando espaços (%20) se houverem
+    return Uri.encodeFull(
+      'https://raw.githubusercontent.com/luisantonioju/flutterolharqueprotege_app/main/assets/video/$nomeArquivo',
+    );
+  }
 }
