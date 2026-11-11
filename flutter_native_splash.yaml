@@ -1,0 +1,8 @@
+flutter_native_splash:
+  color: "#ffffff" # Cor de fundo da tela de splash (ex: branco)
+  image: "assets/img/LogOlhar.png" # Ou o caminho da sua imagem PNG
+
+  # Opcional para Android 12+
+  android_12:
+    color: "#ffffff"
+    image: "assets/img/LogOlhar.png"
