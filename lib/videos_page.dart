@@ -19,7 +19,7 @@ class _VideosPageState extends State<VideosPage> {
           'ECA Digital: Novas regras para proteger menores na internet entram em vigor | CNN PRIME TIME',
       descricao:
           'O ECA Digital, que estabelece novas regras para proteger crianças e adolescentes na internet, entrou em vigor nesta terça-feira (17). A lei é uma atualização do Estatuto da Criança e do Adolescente voltada para as plataformas digitais. #CNNBrasil',
-      arquivo: 'video4.mp4',
+      arquivo: 'video1.mp4',
     ),
     Video(
       id: 2,
@@ -27,13 +27,13 @@ class _VideosPageState extends State<VideosPage> {
           'ECA Digital: Lei que protege crianças na internet entra em vigor hoje; especialista comenta',
       descricao:
           'A nova legislação impõe regras rígidas para plataformas e redes sociais, proibindo a autodeclaração de idade e exigindo mecanismos de verificação mais seguros.',
-      arquivo: 'video1.mp4',
+      arquivo: 'video2.mp4',
     ),
     Video(
       id: 3,
       titulo: 'Orgãos governamentais se mobilizam.',
       descricao: 'Veja o vídeo da Prefeitura de Aracaju.',
-      arquivo: 'video2.mp4',
+      arquivo: 'video3.mp4',
     ),
     Video(
       id: 3,
