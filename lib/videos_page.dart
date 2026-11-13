@@ -15,21 +15,31 @@ class _VideosPageState extends State<VideosPage> {
   late final List<Video> _listaVideos = [
     Video(
       id: 1,
-      titulo: 'Vídeo 1',
-      descricao: 'Vídeo carregado diretamente do repositório GitHub.',
-      arquivo: 'urEMwu5kZDEfYlNjFScZZa78vazf0Xk3U3JNBqvB.mp4',
+      titulo:
+          'ECA Digital: Novas regras para proteger menores na internet entram em vigor | CNN PRIME TIME',
+      descricao:
+          'O ECA Digital, que estabelece novas regras para proteger crianças e adolescentes na internet, entrou em vigor nesta terça-feira (17). A lei é uma atualização do Estatuto da Criança e do Adolescente voltada para as plataformas digitais. #CNNBrasil',
+      arquivo: 'video4.mp4',
     ),
     Video(
       id: 2,
-      titulo: 'Vídeo 2',
-      descricao: 'Vídeo com espaço no nome tratado automaticamente.',
-      arquivo: 'F8PCdITz4DZyiOxnpjSmiwkAWCImENfxwPm1fbTB (1).mp4',
+      titulo:
+          'ECA Digital: Lei que protege crianças na internet entra em vigor hoje; especialista comenta',
+      descricao:
+          'A nova legislação impõe regras rígidas para plataformas e redes sociais, proibindo a autodeclaração de idade e exigindo mecanismos de verificação mais seguros.',
+      arquivo: 'video1.mp4',
     ),
     Video(
       id: 3,
-      titulo: 'Vídeo 3',
-      descricao: 'Terceiro vídeo carregado do repositório GitHub.',
-      arquivo: 'PFJ9OKMDGK7nS4jk8ZeOZH5DtXv8eTTkWewTH8XV.mp4',
+      titulo: 'Orgãos governamentais se mobilizam.',
+      descricao: 'Veja o vídeo da Prefeitura de Aracaju.',
+      arquivo: 'video2.mp4',
+    ),
+    Video(
+      id: 3,
+      titulo: 'Família ensina o Google Family Link.',
+      descricao: 'Aprenda como fazer a ativação no smartphone de seu filho.',
+      arquivo: 'video4.mp4',
     ),
   ];
 
