@@ -26,6 +26,8 @@ flutter_launcher_icons:
   image_path: "assets/img/LogOlhar.png"
   android: true
   ios: false  # Desativado para evitar o erro no iOS
+  adaptive_icon_background: "#FFFFFF" # ou caminho para imagem de fundo
+  adaptive_icon_foreground: "assets/img/LogOlhar.png"
 
 flutter:
   uses-material-design: true
