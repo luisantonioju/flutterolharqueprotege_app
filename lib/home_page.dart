@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'sobre_page.dart';
 import 'videos_page.dart';
 import 'blog_page.dart';
+import 'youtube_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -132,6 +133,18 @@ class _HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const BlogPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.article),
+              title: const Text('YouTube'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const YouTubePage(),
                   ),
                 );
               },
