@@ -47,7 +47,7 @@ class Blog {
 
     // Se o caminho começar com 'storage/', ajusta para a URL do servidor
     // No emulador Android, use 10.0.2.2:8000
-    const String baseUrl = 'http://10.0.2.2:8000';
+    const String baseUrl = '';
 
     if (imagem!.startsWith('storage/')) {
       return '$baseUrl/$imagem';
