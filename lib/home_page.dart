@@ -4,6 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'sobre_page.dart';
 import 'youtube_page.dart';
 import 'blog_page.dart';
+import 'admin_login_page.dart';
+import 'cadastro_page.dart';
+import 'login_page.dart';
+import 'services/cadastro_service.dart';
+import 'admin_ver_cadastros_page.dart';
+import 'conteudos_exclusivos_page.dart'; // Importação da tela de Conteúdos Exclusivos
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,9 +23,13 @@ class _HomePageState extends State<HomePage> {
   int _paginaAtual = 0;
   Timer? _timerCarrossel;
 
+  bool _logado = false;
+  final CadastroService _cadastroService = CadastroService();
+
   @override
   void initState() {
     super.initState();
+    _checarSessao();
 
     // Configurando o temporizador para mudar de slide a cada 1 segundo
     _timerCarrossel = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -38,6 +48,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> _checarSessao() async {
+    final token = await _cadastroService.getToken();
+    if (mounted) {
+      setState(() {
+        _logado = token != null;
+      });
+    }
+  }
+
   @override
   void dispose() {
     _timerCarrossel?.cancel();
@@ -53,7 +72,6 @@ class _HomePageState extends State<HomePage> {
     'Esporte',
   ];
 
-  // Modificado aqui para usar a imagem do fone de ouvido nos 3 slides
   final List<String> carrosselImagens = [
     'assets/img/hero-headphones.png',
     'assets/img/girls-bed-laptop.png',
@@ -106,7 +124,7 @@ class _HomePageState extends State<HomePage> {
               leading: const Icon(Icons.info_outline),
               title: const Text('Sobre'),
               onTap: () {
-                Navigator.pop(context); // Fecha o menu lateral
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SobrePage()),
@@ -117,6 +135,7 @@ class _HomePageState extends State<HomePage> {
               leading: const Icon(Icons.video_library),
               title: const Text('Vídeos'),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -129,10 +148,113 @@ class _HomePageState extends State<HomePage> {
               leading: const Icon(Icons.article),
               title: const Text('Blog'),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const BlogPage(),
+                  ),
+                );
+              },
+            ),
+            const Divider(),
+
+            // Opções dinâmicas com base no login do usuário comum
+            if (_logado) ...[
+              ListTile(
+                leading: const Icon(Icons.star, color: Colors.amber),
+                title: const Text('Conteúdos Exclusivos'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ConteudosExclusivosPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout, color: Colors.red),
+                title: const Text('Sair'),
+                onTap: () async {
+                  await _cadastroService.logout();
+                  if (mounted) {
+                    Navigator.pop(context);
+                    setState(() {
+                      _logado = false;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Sessão encerrada com sucesso.')),
+                    );
+                  }
+                },
+              ),
+            ] else ...[
+              ListTile(
+                leading: const Icon(Icons.login),
+                title: const Text('Entrar'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final entrou = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                  if (entrou == true) {
+                    setState(() {
+                      _logado = true;
+                    });
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.person_add),
+                title: const Text('Cadastre-se'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final cadastrado = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CadastroPage()),
+                  );
+                  if (cadastrado == true) {
+                    setState(() {
+                      _logado = true;
+                    });
+                  }
+                },
+              ),
+            ],
+
+            const Divider(),
+
+            // Seção isolada para Gestores / Administradores
+            ListTile(
+              leading: const Icon(Icons.admin_panel_settings,
+                  color: Color(0xFF1B2A4A)),
+              title: const Text('Área do Administrador'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AdminLoginPage(),
+                  ),
+                );
+              },
+            ),
+
+            // Atalho para ver a base de dados JSON dos usuários cadastrados (Protegido por senha)
+            ListTile(
+              leading: const Icon(Icons.data_object, color: Color(0xFF1B2A4A)),
+              title: const Text('Ver Cadastros (JSON)'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AdminVerCadastrosPage(),
                   ),
                 );
               },
