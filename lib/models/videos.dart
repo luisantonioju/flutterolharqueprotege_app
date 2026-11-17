@@ -32,13 +32,13 @@ final List<Video> listaVideos = [
   ),
   const Video(
     id: 3,
-    titulo: 'Órgãos governamentais se mobilizam.',
-    descricao: 'Veja o vídeo da Prefeitura de Aracaju.',
+    titulo: 'Animação lúdica sobre segurança na Internet com a Boiadeira.',
+    descricao: 'Assista essa animação!',
     arquivo: 'qclcRH5jimU',
   ),
   const Video(
     id: 4,
-    titulo: 'Família ensina o Google Family Link.',
+    titulo: 'YouTuber ensina o Google Family Link.',
     descricao:
         'Aprenda sobre os recursos de proteção e acompanhamento familiar no smartphone.',
     arquivo: 'laExLC8PfS0',
